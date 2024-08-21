@@ -64,8 +64,6 @@ func initDBCollections(client *mongo.Client, dbName string) *mongo.Collection {
 	return collection
 }
 
-var storage = make([]TODO, 0, 100)
-
 type TODOList struct {
 	Items []TODO `json:"items"`
 }
@@ -80,8 +78,8 @@ type GetTodosHandler struct {
 	todosCollection *mongo.Collection
 }
 
-func NewGetTodosHandler(todosCollection *mongo.Collection) GetTodosHandler {
-	return GetTodosHandler{
+func NewGetTodosHandler(todosCollection *mongo.Collection) *GetTodosHandler {
+	return &GetTodosHandler{
 		todosCollection: todosCollection,
 	}
 }
@@ -123,8 +121,8 @@ type CreateTodoHandler struct {
 	todosCollection *mongo.Collection
 }
 
-func NewCreateTodoHandler(todosCollection *mongo.Collection) CreateTodoHandler {
-	return CreateTodoHandler{
+func NewCreateTodoHandler(todosCollection *mongo.Collection) *CreateTodoHandler {
+	return &CreateTodoHandler{
 		todosCollection: todosCollection,
 	}
 }
@@ -169,8 +167,8 @@ type UpdateTodoHandler struct {
 	todosCollection *mongo.Collection
 }
 
-func NewUpdateTodoHandler(todosCollection *mongo.Collection) UpdateTodoHandler {
-	return UpdateTodoHandler{
+func NewUpdateTodoHandler(todosCollection *mongo.Collection) *UpdateTodoHandler {
+	return &UpdateTodoHandler{
 		todosCollection: todosCollection,
 	}
 }
@@ -210,8 +208,8 @@ type DeleteTodoHandler struct {
 	todosCollection *mongo.Collection
 }
 
-func NewDeleteTodoHandler(todosCollection *mongo.Collection) DeleteTodoHandler {
-	return DeleteTodoHandler{
+func NewDeleteTodoHandler(todosCollection *mongo.Collection) *DeleteTodoHandler {
+	return &DeleteTodoHandler{
 		todosCollection: todosCollection,
 	}
 }
