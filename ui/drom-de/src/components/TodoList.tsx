@@ -42,7 +42,7 @@ const TodoList = () => {
 					<Text fontSize={"xl"} textAlign={"center"} color={"gray.500"}>
 						All tasks completed! 🤞
 					</Text>
-					<img src='/go.png' alt='Go logo' width={70} height={70} />
+					<img src='/golang_icon.png' alt='Go logo' width={70} height={70} />
 				</Stack>
 			)}
 			<Stack gap={3}>

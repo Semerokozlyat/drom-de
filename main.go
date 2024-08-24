@@ -23,9 +23,11 @@ import (
 const (
 	EnvServerPort   = "SERVER_PORT"
 	EnvDBConnString = "DB_CONN_STRING"
+	EnvMode         = "MODE"
 )
 
 type Config struct {
+	Mode         string `json:"mode" yaml:"mode"`
 	ServerPort   string `json:"server_port" yaml:"serverPort"`
 	DBConnString string `json:"db_conn_string" yaml:"dbConnString"`
 }
@@ -39,8 +41,13 @@ func InitConfig() Config {
 	if dbConnString == "" {
 		dbConnString = "mongodb://root:root@127.0.0.1"
 	}
+	mode := os.Getenv(EnvMode)
+	if mode == "" {
+		mode = "staging"
+	}
 
 	return Config{
+		Mode:         mode,
 		ServerPort:   srvPort,
 		DBConnString: dbConnString,
 	}
@@ -237,6 +244,16 @@ func (h *DeleteTodoHandler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	cfg := InitConfig()
+	dbClient, err := newDatabaseClient(context.Background(), cfg)
+	if err != nil {
+		log.Fatalf("failed to create Mongo DB client: %s", err)
+	}
+
+	ctx := context.Background()
+	defer dbClient.Disconnect(ctx) // TODO: move to server shutdown phase
+	todosCollection := initDBCollections(dbClient, "todos_db")
+
 	router := chi.NewRouter()
 	router.Use(middleware.RequestID)
 	router.Use(middleware.Logger)
@@ -252,20 +269,14 @@ func main() {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
-	cfg := InitConfig()
-	dbClient, err := newDatabaseClient(context.Background(), cfg)
-	if err != nil {
-		log.Fatalf("failed to create Mongo DB client: %s", err)
-	}
-
-	ctx := context.Background()
-	defer dbClient.Disconnect(ctx) // TODO: move to server shutdown phase
-	todosCollection := initDBCollections(dbClient, "todos_db")
-
 	router.Get("/api/todos", NewGetTodosHandler(todosCollection).ServeHTTP)
 	router.Post("/api/todos", NewCreateTodoHandler(todosCollection).ServeHTTP)
 	router.Patch("/api/todos/{todoID}", NewUpdateTodoHandler(todosCollection).ServeHTTP)
 	router.Delete("/api/todos/{todoID}", NewDeleteTodoHandler(todosCollection).ServeHTTP)
+	if cfg.Mode == "production" {
+		fs := http.FileServer(http.Dir("./ui/drom-de/dist")) // re-route all other request to React app.
+		router.Handle("/", fs)
+	}
 
 	srv := &http.Server{
 		Addr:              ":" + cfg.ServerPort,
