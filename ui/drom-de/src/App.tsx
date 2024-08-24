@@ -3,6 +3,8 @@ import Navbar from "./components/Navbar.tsx";
 import TodoForm from "./components/TodoForm.tsx";
 import TodoList from "./components/TodoList.tsx";
 
+export const BASE_URL = "http://127.0.0.1:4040/api";
+
 function App() {
   return (
     <Stack h="100vh">
