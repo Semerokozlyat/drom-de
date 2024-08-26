@@ -1,8 +1,8 @@
-import Profile from './components/Profile.jsx';
+import ToolBar from "./components/EventsHandling.jsx";
 
 export default function App() {
     return (
-        <Profile />
+        <ToolBar />
     );
 }
 
