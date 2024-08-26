@@ -1,8 +1,8 @@
-import ToolBar from "./components/EventsHandling.jsx";
+import GalleryWithState from "./components/ComponentState.jsx";
 
 export default function App() {
     return (
-        <ToolBar />
+        <GalleryWithState />
     );
 }
 
