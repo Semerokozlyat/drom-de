@@ -1,8 +1,8 @@
-import GalleryWithState from "./components/ComponentState.jsx";
+import Counter from "./components/ComponentStateUpdateBatch.jsx";
 
 export default function App() {
     return (
-        <GalleryWithState />
+        <Counter />
     );
 }
 
