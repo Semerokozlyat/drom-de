@@ -1,8 +1,9 @@
-import Counter from "./components/ComponentStateUpdateBatch.jsx";
+//import MovingDotAfterCursor from "./components/UpdateObjectInState.jsx";
+import {DeleteFromListInState} from "./components/UpdateArraysInState.jsx";
 
 export default function App() {
     return (
-        <Counter />
+        <DeleteFromListInState />
     );
 }
 
